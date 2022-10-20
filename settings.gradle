@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "EnhancedProgress"
 include ':app'
-include ':enhancedProgress'
