@@ -10,27 +10,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ArcProgressBar(
     modifier: Modifier = Modifier,
-    progresses: List<ProgressData>,
+    progress: List<ProgressData>,
     backgroundColor: Color = Color.Transparent,
     radius: Dp = 50.dp,
-    stroke: Dp = 2.dp
+    stroke: Dp = 2.dp,
+    baseAngle: Float = 150f
 ) {
 
-    val calculatedProgresses = List(progresses.size) {
-        progresses[it].progress * 100f * 2.4f
+    val calculatedProgresses = List(progress.size) {
+        progress[it].progress * 100f * 2.4f
     }
 
     val animatedBase = remember {
         Animatable(0f)
     }
 
-    val animatedProgresses = progresses.map {
+    val animatedProgresses = progress.map {
         remember {
             Animatable(0f)
         }
@@ -40,23 +42,26 @@ fun ArcProgressBar(
         animatedBase.animateTo(240f)
     }
 
-    LaunchedEffect(key1 = progresses) {
+    LaunchedEffect(key1 = progress) {
         animatedProgresses.forEachIndexed { index, it ->
-            it.animateTo(
-                calculatedProgresses[index]
-            )
+            it.animateTo(calculatedProgresses[index])
         }
     }
 
     Canvas(modifier = modifier.size(radius * 2f)) {
+
+        // Drawing background
         drawCircle(color = backgroundColor, radius = radius.toPx() / 3, alpha = .4f)
+
+        // Drawing base
         drawArc(
             Color.Gray,
-            150f,
+            baseAngle,
             animatedBase.value,
             useCenter = false,
             style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
         )
+
         animatedProgresses.forEachIndexed { index, it ->
             val lastSweep = if (index > 0) {
                 var i = 0f
@@ -68,40 +73,42 @@ fun ArcProgressBar(
 
             when (index) {
                 0 -> {
+                    // First progress part
                     drawArc(
-                        color = progresses[index].color,
-                        startAngle = 150f,
+                        color = progress[index].color,
+                        startAngle = baseAngle,
                         sweepAngle = it.value / 2,
                         useCenter = false,
                         style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
                     )
                     drawArc(
-                        color = progresses[index].color,
-                        startAngle = 150f + it.value / 2,
+                        color = progress[index].color,
+                        startAngle = baseAngle + it.value / 2,
                         sweepAngle = it.value / 2,
                         useCenter = false,
                         style = Stroke(width = stroke.toPx())
                     )
                 }
                 animatedProgresses.size - 1 -> {
+                    // Last progress part
                     drawArc(
-                        color = progresses[index].color,
-                        startAngle = 150f + lastSweep,
+                        color = progress[index].color,
+                        startAngle = baseAngle,
                         sweepAngle = it.value / 2,
                         useCenter = false,
                         style = Stroke(width = stroke.toPx())
                     )
                     drawArc(
-                        color = progresses[index].color,
-                        startAngle = 150f + lastSweep + it.value / 2,
+                        color = progress[index].color,
+                        startAngle = baseAngle + it.value / 2,
                         sweepAngle = it.value / 2,
                         useCenter = false,
                         style = Stroke(width = stroke.toPx(), cap = StrokeCap.Round)
                     )
                 }
                 else -> drawArc(
-                    color = progresses[index].color,
-                    startAngle = 150f + lastSweep,
+                    color = progress[index].color,
+                    startAngle = baseAngle + lastSweep,
                     sweepAngle = it.value,
                     useCenter = false,
                     style = Stroke(width = stroke.toPx())
@@ -109,4 +116,15 @@ fun ArcProgressBar(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ArcProgressBarPreview() {
+    ArcProgressBar(
+        progress = listOf(
+            ProgressData(.2f, Color.Red),
+            ProgressData(.4f, Color.Green)
+        )
+    )
 }

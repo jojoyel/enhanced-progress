@@ -20,9 +20,9 @@ import kotlinx.coroutines.async
 import kotlin.math.max
 
 @Composable
-fun MultipleProgressBar(modifier: Modifier = Modifier, progresses: List<ProgressData>, height: Dp) {
+fun LinearProgressBar(modifier: Modifier = Modifier, progress: List<ProgressData>, height: Dp) {
 
-    val p = progresses.sortedBy { it.progress }.reversed()
+    val p = progress.sortedBy { it.progress }.reversed()
 
     val pxHeight = with(LocalDensity.current) { height.value.dp.toPx() }
 
@@ -40,7 +40,7 @@ fun MultipleProgressBar(modifier: Modifier = Modifier, progresses: List<Progress
         animatedStroke.animateTo(pxHeight)
     }
 
-    LaunchedEffect(progresses) {
+    LaunchedEffect(progress) {
         animatedProgresses.forEachIndexed { index, it ->
             async {
                 it.animateTo(p[index].progress * 100, tween(delayMillis = index * 20))
