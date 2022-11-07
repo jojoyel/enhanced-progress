@@ -1,11 +1,10 @@
 package com.jojo.enhancedprogress
 
-
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -14,17 +13,29 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.async
 import kotlin.math.max
 
+/**
+ * Displays a straight progress bar with different progress given in list of [ProgressData]
+ * <p>
+ * @see [ProgressData]
+ * @param progress A list of progress to be displayed on the arc, see [ProgressData]
+ * @param stroke The thickness of the bars
+ */
 @Composable
-fun LinearProgressBar(modifier: Modifier = Modifier, progress: List<ProgressData>, height: Dp) {
+fun LinearProgressBar(
+    modifier: Modifier = Modifier,
+    progress: List<ProgressData>,
+    stroke: Dp = 5.dp
+) {
 
     val p = progress.sortedBy { it.progress }.reversed()
 
-    val pxHeight = with(LocalDensity.current) { height.value.dp.toPx() }
+    val pxHeight = with(LocalDensity.current) { stroke.value.dp.toPx() }
 
     val animatedStroke = remember {
         Animatable(0f)
@@ -49,14 +60,14 @@ fun LinearProgressBar(modifier: Modifier = Modifier, progress: List<ProgressData
     }
 
     Canvas(
-        modifier = modifier
-            .height(height)
-            .fillMaxWidth()
+        modifier = Modifier
+            .height(stroke)
+            .then(modifier)
     ) {
         drawLine(
             color = Color.Gray,
             start = Offset(0f + pxHeight, pxHeight / 2),
-            end = Offset(size.width - pxHeight, pxHeight / 2),
+            end = Offset(size.width - pxHeight / 2, pxHeight / 2),
             strokeWidth = animatedStroke.value,
             cap = StrokeCap.Round
         )
@@ -70,4 +81,16 @@ fun LinearProgressBar(modifier: Modifier = Modifier, progress: List<ProgressData
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun LinearProgressBarPreview() {
+    LinearProgressBar(
+        progress = listOf(
+            ProgressData(.3f, Color.Red),
+            ProgressData(.7f, Color.Green)
+        ),
+        modifier = Modifier.width(200.dp)
+    )
 }
