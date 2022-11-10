@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -137,26 +136,5 @@ fun ArcProgressBar(
                 }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ArcProgressBarPreview() {
-    Column {
-        ArcProgressBar(
-            progress = listOf(
-                ProgressData(.4f, Color.Green),
-                ProgressData(.2f, Color.Red),
-            ),
-            stroke = 5.dp,
-        )
-        CircleProgressBar(
-            progress = listOf(
-                ProgressData(.3f, Color.Blue),
-                ProgressData(.5f, Color.Magenta)
-            ),
-            radius = 4.dp
-        )
     }
 }
