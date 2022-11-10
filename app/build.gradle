@@ -68,8 +68,8 @@ dependencies {
 publishing {
     publications {
         release(MavenPublication) {
-            groupId = 'com.jojo'
-            artifactId = 'enhanced_progress'
+            groupId = 'com.github.jojoyel'
+            artifactId = 'enhanced-progress'
             version = '1.0.0'
 
             afterEvaluate {
