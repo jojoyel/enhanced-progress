@@ -13,7 +13,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.async
@@ -81,16 +80,4 @@ fun LinearProgressBar(
             )
         }
     }
-}
-
-@Preview
-@Composable
-fun LinearProgressBarPreview() {
-    LinearProgressBar(
-        progress = listOf(
-            ProgressData(.3f, Color.Red),
-            ProgressData(.7f, Color.Green)
-        ),
-        modifier = Modifier.width(200.dp)
-    )
 }
