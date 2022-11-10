@@ -1,4 +1,4 @@
-package com.jojo.enhancedprogress
+package com.jojo.enhanced_progress
 
 import androidx.compose.ui.graphics.Color
 

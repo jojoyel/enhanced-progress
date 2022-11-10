@@ -5,18 +5,21 @@ plugins {
 }
 
 android {
-    namespace 'com.jojo.enhancedprogress'
-    compileSdk 32
+    namespace 'com.jojo.enhanced_progress'
+    compileSdk 33
 
     defaultConfig {
-        minSdk 21
-        targetSdk 32
+        minSdk 28
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
+        }
+        aarMetadata {
+            minCompileSdk 28
         }
     }
 
@@ -62,15 +65,15 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:1.2.1"
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.jojo'
+            artifactId = 'enhanced_progress'
+            version = '1.0.0'
 
-                groupId = 'com.github.jojoyel'
-                artifactId = 'enhanced_progress'
-                version = '1.0.0'
+            afterEvaluate {
+                from components.release
             }
         }
     }
