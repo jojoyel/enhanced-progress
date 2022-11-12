@@ -1,7 +1,4 @@
-# Enhanced Progress library
-
-*Current version : **1.0.0***
-<hr />
+# Enhanced Progress library [![Release](https://jitpack.io/v/jojoyel/enhanced-progress.svg)](https://jitpack.io/#jojoyel/enhanced-progress)
 
 ## Description
 
@@ -54,10 +51,22 @@ LinearProgressBar(
 
 ## Install
 
-First, download the .aar file in
-the [releases page](https://github.com/jojoyel/EnhancedProgress/releases) and pick the version you
-want. Then move it in your project by opening the *project structure* [**
-Ctrl+Alt+Shift+S** (by default)] and open *
-Dependencies tab*, under *All dependencies* select *JAR/AAR Dependency*
-![](.\manifest_res\install_1.png "Install info")
-Fill the path to the file and click *OK*, all set to go !
+The library is deployed with [jitpack](https://jitpack.io/#jojoyel/enhanced-progress) and ready to use in your project, just follow these few steps :
+
+settings.gradle
+```gradle
+dependencyResolutionManagement {
+    ...
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }       
+    }
+}
+```
+
+build.gradle (app)
+```gradle
+dependencies {
+    implementation 'com.github.jojoyel:enhanced-progress:1.0.0'
+}
+```
