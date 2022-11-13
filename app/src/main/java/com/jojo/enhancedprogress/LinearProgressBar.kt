@@ -1,6 +1,7 @@
 package com.jojo.enhancedprogress
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.isFinished
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.height
@@ -21,40 +22,63 @@ import kotlin.math.max
 
 /**
  * Displays a straight progress bar with different progress given in list of [ProgressData]
+ * The bar will fill the width defined, to restrict it, set a width in the modifier param or in the parent of this bar
  * <p>
  * @see [ProgressData]
+ * @see [AnimationSpecs]
  * @param progress A list of progress to be displayed on the arc, see [ProgressData]
  * @param stroke The thickness of the bars
+ * @param backgroundColor The color of the bar in the background
+ * @param animationSpecs Options to affect how animations will run, see [AnimationSpecs]
  */
 @Composable
 fun LinearProgressBar(
     modifier: Modifier = Modifier,
     progress: List<ProgressData>,
-    stroke: Dp = 5.dp
+    stroke: Dp = 5.dp,
+    backgroundColor: Color = Color.Gray,
+    animationSpecs: AnimationSpecs = AnimationSpecs(),
+    animationEnded: () -> Unit = {}
 ) {
-
     val p = progress.sortedBy { it.progress }.reversed()
 
     val pxHeight = with(LocalDensity.current) { stroke.value.dp.toPx() }
 
-    val animatedStroke = remember {
+    val baseProgress = remember {
         Animatable(0f)
     }
 
-    val animatedProgresses = p.map {
+    val animatedProgress = p.map {
         remember {
             Animatable(0f)
         }
     }
 
-    LaunchedEffect(key1 = true) {
-        animatedStroke.animateTo(pxHeight)
+    LaunchedEffect(Unit) {
+        baseProgress.animateTo(
+            1f,
+            animationSpec = tween(
+                delayMillis = animationSpecs.startDelay,
+                durationMillis = animationSpecs.duration
+            )
+        )
     }
 
-    LaunchedEffect(progress) {
-        animatedProgresses.forEachIndexed { index, it ->
+    LaunchedEffect(p) {
+        animatedProgress.forEachIndexed { index, it ->
             async {
-                it.animateTo(p[index].progress * 100, tween(delayMillis = index * 20))
+                val result = it.animateTo(
+                    p[index].progress,
+                    tween(
+                        delayMillis = animationSpecs.startDelay + ((index + 1) * animationSpecs.betweenDelay),
+                        durationMillis = animationSpecs.duration
+                    )
+                ).endState
+
+                when {
+                    result.isFinished && index == animatedProgress.size - 1 -> animationEnded()
+                    else -> {}
+                }
             }
         }
     }
@@ -64,21 +88,27 @@ fun LinearProgressBar(
             .height(stroke)
             .then(modifier)
     ) {
-        drawLine(
-            color = Color.Gray,
-            start = Offset(0f + pxHeight, pxHeight / 2),
-            end = Offset(size.width - pxHeight / 2, pxHeight / 2),
-            strokeWidth = animatedStroke.value,
-            cap = StrokeCap.Round
-        )
-        animatedProgresses.forEachIndexed { index, it ->
+        if (baseProgress.value > 0)
             drawLine(
-                color = p[index].color,
+                color = backgroundColor,
                 start = Offset(0f + pxHeight / 2, pxHeight / 2),
-                end = Offset(max((it.value * size.width / 100) - pxHeight / 2, 0f), pxHeight / 2),
+                end = Offset(baseProgress.value * size.width - pxHeight / 2, pxHeight / 2),
                 strokeWidth = pxHeight,
                 cap = StrokeCap.Round
             )
+
+        animatedProgress.forEachIndexed { index, it ->
+            if (it.value > 0)
+                drawLine(
+                    color = p[index].color,
+                    start = Offset(0f + pxHeight / 2, pxHeight / 2),
+                    end = Offset(
+                        max(it.value * size.width - pxHeight / 2, 0f),
+                        pxHeight / 2
+                    ),
+                    strokeWidth = pxHeight,
+                    cap = StrokeCap.Round
+                )
         }
     }
 }
@@ -89,8 +119,9 @@ fun LinearProgressBarPreview() {
     LinearProgressBar(
         progress = listOf(
             ProgressData(.3f, Color.Red),
-            ProgressData(.7f, Color.Green)
+            ProgressData(.7f, Color.Green),
         ),
-        modifier = Modifier.width(200.dp)
-    )
+        modifier = Modifier.width(200.dp),
+        animationSpecs = AnimationSpecs(duration = 5000, betweenDelay = 1000)
+    ) {}
 }
