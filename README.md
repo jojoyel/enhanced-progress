@@ -1,7 +1,4 @@
-# Enhanced Progress library
-
-*Current version : **1.0.0***
-<hr />
+# Enhanced Progress library [![Release](https://jitpack.io/v/jojoyel/enhanced-progress.svg)](https://jitpack.io/#jojoyel/enhanced-progress)
 
 ## Description
 
@@ -52,12 +49,72 @@ LinearProgressBar(
 )
 ```
 
+## Documentation
+
+### Class
+
+#### ProgressData
+
+| Property name | Description                                                                                                |
+|---------------|------------------------------------------------------------------------------------------------------------|
+| progress      | A float, representing the progress, value must be >= 0f and <=1f (if you want to represent 75%, fill .75f) |
+| color         | A color used to display the given progress                                                                 |
+
+#### AnimationSpecs
+
+*Every delay has to be given in millis*
+
+| Property name | Description                                                            |
+|---------------|------------------------------------------------------------------------|
+| startDelay    | Time before the animations start                                       |
+| betweenDelay  | Time between each progress, 0 will animate everything at the same time |
+| duration      | Duration for each animation                                            |
+
+### Composables
+
+#### LinearProgressBar
+
+| Property name   | Description                                                               | Image                                                                                 |
+|-----------------|---------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+| progress        | A list of ProgressData class to be shown as a bar, see ProgressData class | <img height="100" src=".\manifest_res\doc\linearprogressbar\image1.gif" width="100"/> |
+| stroke          | The thickness of all the bars                                             |                                                                                       |
+| backgroundColor | The color of the bar at the back                                          |                                                                                       |
+| insideCap       | The aspect of the caps not at the edges of the arc                        |                                                                                       |
+| animationsSpecs | See AnimationSpecs class                                                  | -                                                                                     |
+| animationEnded  | Called when the last animation has finished                               | -                                                                                     |
+
+#### ArcProgressBar
+
+| Property name | Description                                                                                          | Image |
+|---------------|------------------------------------------------------------------------------------------------------|-------|
+| progress      | A list of ProgressData class to be shown as a bar, see ProgressData class                            |       |
+| radius        | Radius from the center, in dp                                                                        |       |
+| stroke        | The thickness of all the arcs                                                                        |       |
+| baseAngle     | The angle where the arc starts to draw, 0f is EAST and increasing the value will go counterclockwise |       |
+| endAngle      | The angle where the arc stops, calculated from the base angle                                        |       |
+| insideCap     | The aspect of the caps not at the edges of the arc                                                   |       |
+
 ## Install
 
-First, download the .aar file in
-the [releases page](https://github.com/jojoyel/EnhancedProgress/releases) and pick the version you
-want. Then move it in your project by opening the *project structure* [**
-Ctrl+Alt+Shift+S** (by default)] and open *
-Dependencies tab*, under *All dependencies* select *JAR/AAR Dependency*
-![](.\manifest_res\install_1.png "Install info")
-Fill the path to the file and click *OK*, all set to go !
+The library is deployed with [jitpack](https://jitpack.io/#jojoyel/enhanced-progress) and ready to
+use in your project, just follow these few steps :
+
+settings.gradle
+
+```gradle
+dependencyResolutionManagement {
+    ...
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }       
+    }
+}
+```
+
+build.gradle (app)
+
+```gradle
+dependencies {
+    implementation 'com.github.jojoyel:enhanced-progress:1.0.0'
+}
+```

@@ -37,6 +37,7 @@ fun LinearProgressBar(
     progress: List<ProgressData>,
     stroke: Dp = 5.dp,
     backgroundColor: Color = Color.Gray,
+    insideCap: StrokeCap = StrokeCap.Round,
     animationSpecs: AnimationSpecs = AnimationSpecs(),
     animationEnded: () -> Unit = {}
 ) {
@@ -98,7 +99,7 @@ fun LinearProgressBar(
             )
 
         animatedProgress.forEachIndexed { index, it ->
-            if (it.value > 0)
+            if (it.value > 0) {
                 drawLine(
                     color = p[index].color,
                     start = Offset(0f + pxHeight / 2, pxHeight / 2),
@@ -109,6 +110,18 @@ fun LinearProgressBar(
                     strokeWidth = pxHeight,
                     cap = StrokeCap.Round
                 )
+                drawLine(
+                    color = p[index].color,
+                    start = Offset(it.value / 2 + pxHeight / 2, pxHeight / 2),
+                    end = Offset(
+                        max(it.value / 2 * size.width - pxHeight / 2, 0f),
+                        pxHeight / 2
+                    ),
+                    strokeWidth = pxHeight,
+                    cap = insideCap
+                )
+            }
+
         }
     }
 }
@@ -122,6 +135,7 @@ fun LinearProgressBarPreview() {
             ProgressData(.7f, Color.Green),
         ),
         modifier = Modifier.width(200.dp),
-        animationSpecs = AnimationSpecs(duration = 5000, betweenDelay = 1000)
+        animationSpecs = AnimationSpecs(duration = 5000, betweenDelay = 1000),
+        insideCap = StrokeCap.Butt
     ) {}
 }
