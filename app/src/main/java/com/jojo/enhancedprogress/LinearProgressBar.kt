@@ -5,7 +5,6 @@ import androidx.compose.animation.core.isFinished
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -14,7 +13,6 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.async
@@ -124,18 +122,4 @@ fun LinearProgressBar(
 
         }
     }
-}
-
-@Preview
-@Composable
-fun LinearProgressBarPreview() {
-    LinearProgressBar(
-        progress = listOf(
-            ProgressData(.3f, Color.Red),
-            ProgressData(.7f, Color.Green),
-        ),
-        modifier = Modifier.width(200.dp),
-        animationSpecs = AnimationSpecs(duration = 5000, betweenDelay = 1000),
-        insideCap = StrokeCap.Butt
-    ) {}
 }
